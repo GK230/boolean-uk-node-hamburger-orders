@@ -87,3 +87,38 @@ hamburgersRouter.get("/", (req, res) => {
   }
   res.json({ hamburgers: response });
 });
+
+hamburgersRouter.post("/", (req, res) => {
+  const newHamburger = req.body;
+
+  hamburgers = [...hamburgers, newHamburger];
+
+  res.json({ hamburger: newHamburger });
+});
+
+hamburgersRouter.patch("/:id", (req, res) => {
+  let { id } = req.params;
+  id = Number(id);
+
+  const hamburger = hamburgers.find((hamburger) => hamburger.id === id);
+
+  let responseHamburger = null;
+
+  if (hamburger) {
+    const updatedHamburger = req.body;
+
+    hamburgers = hamburgers.map((hamburger) => {
+      if (hamburger.id === id) {
+        responseHamburger = { ...hamburger, ...updatedHamburger };
+        return responseHamburger;
+      } else {
+        return hamburger;
+      }
+    });
+  } else {
+    responseHamburger = "No relevant hamburger";
+  }
+  res.json({ updatedHamburger: responseHamburger });
+});
+
+module.exports = hamburgersRouter;
